@@ -313,3 +313,37 @@ url :  http://xxx.xxx.xxx.xx:8080
 url :  http://xxx.xxx.xxx.xx:8443
 
 ![](./image/hs.png)
+
+
+
+
+
+### 확인 사항
+
+**jvm 상태 확인**
+
+Runtime(런타임) ® Standalone Server(독립 실행형 서버) ® JVM으로 이동하고 View(보기)
+
+
+
+![](./image/status.png)
+
+
+
+**로그 확인**
+
+Runtime(런타임) ® Standalone Server(독립 실행형 서버) ® Log Files(로그 파일)로 이동하고 View(보기) 단추를 클릭하여 로그 뷰어를 확인합니다.
+
+
+
+![](./image/log.jpg)
+
+
+
+**deployment scanner 설정**
+
+ Configuration(구성) ® Subsystems(하위 시스템) ® Deployment Scanners(배포 스캐너)로 이동한 다음 View(보기) 단추를 클릭 여 Deployment Scanners(배포 스캐너) 구성 페이지를 확인합니다
+
+
+
+![](./image/scanne.jpg)
