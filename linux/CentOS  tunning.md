@@ -72,9 +72,9 @@ force_latency=1
 
 ### kernel scheduler
 
-**sched_min_granularity_ns**
+**sched_min_granularity_ns** : CPU에 밀접한 태스크를 위한 최소 선점 정밀도 ( 단위 나노초 )
 
-**sched_wakeup_granularity_ns**
+**sched_wakeup_granularity_ns** : `SCHED_OTHER`를 위한 깨우기 정밀도 ( 단위 나노초 )
 
 ```
 kernel.sched_min_granularity_ns = 10000000
@@ -96,11 +96,12 @@ kernel.numa_balancing=0
 
 ### Virtural Memory
 
-**dirty_ratio**
+**dirty_ratio** : vm.dirty_background_ratio와 비슷하게 전체 메모리를 기준으로 dirty page의 비율을 산정하지만 background라는 단어가 빠져있음을 눈여겨 봐야한다. 만약 이값이 10으로 설정되어 있고 전체 메모리가 16GB라고 가정한다면, A라는 프로세스가 I/O 작업을 하던 중 dirty페이지의 크기가 1.6GB가 되면 해당 프로세스의 I/O 작업을 모두 멈추게 하고 dirty page를 동기화한다. dirty page에 대한 일종의 hard limit라고 볼 수 있다.
 
-**dirty_background_ratio**
+**dirty_background_ratio** : dirty page의 내용을 백그라운드로 동기화할 때 그 기준이 되는 비율을 의미한다. 전체 메모리 양에 해당 파라미터에 설정되어있는 비율을 곱해서 나온 기준값보다 dirty page 크기가 커지면 백그라운드에서 dirty page의 내용을 디스크로 동기화한다. 만약 이 값이 10이고 전체 메모리가 16GB라고 가정한다면, dirty page의 크기가 1.6GB가 되었을 때 백그라운드 동기화를 진행한다
 
-**swappiness**
+**swappiness** :  커널 문서에도 정의되어 있는 것처럼 메모리가 부족한 상황에서도 캐시를 비우느냐 아니면 특정 프로세스의 메모리 영역을 swap영역으로 옮기느냐를 결정한다.
+이 값이 커지면 캐시를 비우지 않고 swap영역으로 옮기는 작업을 더 빨리 진행하고, 이 값이 작아지면 가능한 한 캐시를 비우는 작업을 진행한다.
 
 ```
 /etc/sysctl.conf
@@ -270,11 +271,21 @@ echo 'noop'> /sys/block/sda/queue/scheduler
 
 ### socket
 
-**busy_read**
+**busy_read** : 소켓의 읽기 용 장치 큐에서 패킷을 기다리는 시간을 마이크로 초 단위로 관리 
+                        ( defaults 0 , 소켓 수가 적은 경우 `50`으로 소켓 수가 많은 경우 `100`으로 설정할 것을 권장 )
 
-**busy_poll**
+**busy_poll** : 소켓 폴링 및 선택 용 장치 큐에서 패킷을 기다리는 시간을 마이크로 초 단위로 관리
+                        ( Red Hat은 `50`으로 설정 )
 
-**tcp_fastopen**
+**tcp_fastopen ** : tcp 3-hand negotiation에서 몇 단계을 생략해서 접속을 빠르게 하는 기능
+
+​                             0 : 비활성화
+
+​                             1 :  TFO가 나가는 연결 (클라이언트)에서만 활성화
+
+​                             2 : 수신 소켓 (서버)에서만 사용할 수 있음
+
+​                             3 : 둘 다 활성화
 
 ```
 net.core.busy_read=50
@@ -286,11 +297,11 @@ net.ipv4.tcp_fastopen=3
 
 ### buffer
 
-**tcp_rmem**
+**tcp_rmem** :  TCP를 위해 사용할 수 있는 receive(read) buffer의 크기 ( min / pressure / max )
 
-**tcp_wmem**
+**tcp_wmem** :  TCP를 위해 사용할 수 있는 send(write) buffer의 크기 ( min / pressure / max )
 
-**udp_mem**
+**udp_mem** :  UDP를 위해 사용할 수 있는 메모리 크기 ( min / pressure / max )
 
 ```
 net.ipv4.tcp_rmem="4096 87380 16777216"
@@ -298,3 +309,4 @@ net.ipv4.tcp_wmem="4096 16384 16777216"
 net.ipv4.udp_mem="3145728 4194304 16777216"
 ```
 
+단위는 page   ( 1page = 4096 byte)
