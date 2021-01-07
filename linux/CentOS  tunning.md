@@ -310,3 +310,100 @@ net.ipv4.udp_mem="3145728 4194304 16777216"
 ```
 
 단위는 page   ( 1page = 4096 byte)
+
+
+
+
+
+tuned.conf
+
+```
+#
+# tuned configuration
+#
+
+[main]
+summary=Broadly applicable tuning that provides excellent performance across a variety of common server workloads
+
+[cpu]
+governor=performance
+energy_perf_bias=performance
+min_perf_pct=100
+force_latency=1
+
+[os_disk]
+readahead=4096
+type=disk
+devices=vda
+elevator=kyber
+
+[data_disk]
+readahead=8128
+type=disk
+devices=vdb
+elevator=deadline
+
+[data1_disk]
+readahead=8128
+type=disk
+devices=vdc
+elevator=none
+
+
+[sysctl]
+kernel.sched_min_granularity_ns = 10000000
+kernel.sched_wakeup_granularity_ns = 15000000
+
+vm.dirty_ratio=10
+vm.dirty_background_ratio=3
+vm.swappiness=10
+
+net.core.busy_read=50
+net.core.busy_poll=50
+net.ipv4.tcp_fastopen=3
+kernel.numa_balancing=0
+
+net.ipv4.tcp_rmem="4096 87380 16777216"
+net.ipv4.tcp_wmem="4096 16384 16777216"
+net.ipv4.udp_mem="3145728 4194304 16777216"
+
+[bootloader]
+cmdline=skew_tick=1
+
+
+[script]
+script=/etc/tuned/k8s/k8s.sh
+
+```
+
+
+
+k8s.sh
+
+```
+#!/bin/bash
+echo "1" > /proc/sys/vm/overcommit_memory
+
+echo "never" > /sys/kernel/mm/transparent_hugepage/enabled
+
+mount -o remount,nobarrier /d1
+mount -o remount,nobarrier /d2
+
+#echo 'cfq'> /sys/block/vda/queue/scheduler
+#echo 'deadline'> /sys/block/vdb/queue/scheduler
+#echo 'noop'> /sys/block/vdc/queue/scheduler
+
+echo 128 > /sys/block/vda/queue/nr_requests
+echo 256 > /sys/block/vdb/queue/nr_requests
+echo 512 > /sys/block/vdc/queue/nr_requests
+
+echo 1 > /sys/block/vda/queue/rq_affinity
+echo 0 > /sys/block/vdb/queue/rq_affinity
+echo 1 > /sys/block/vdc/queue/rq_affinity
+
+echo 1 > /sys/block/vdc/queue/rotational
+echo 0 > /sys/block/vdc/queue/rotational
+echo 1 > /sys/block/vdc/queue/rotational
+
+```
+
