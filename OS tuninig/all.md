@@ -22,15 +22,7 @@ net.ipv4.neigh.default.gc_interval = 30
 
 
 
-​	\# gc 대상 시간  
-
-```
-net.ipv4.neigh.default.gc_stale_time = 60
-```
-
-> 급할 경우 arp. 초기화 : ip -s -s neigh flush all 
-
-
+​	\# gc 대상 시간  +
 
 ## 브릿지 트래픽 iptables에서 확인 
 
