@@ -153,3 +153,22 @@
 >
 > **OS 설치 이후  nvidia drive를 설치 해야 정상적인 사용 가능** 
 
+### 5. Guest OS
+
+설졍 변경을 해야 pci passthru가 정상적으로 동작함 
+
+```
+ virsh edit gworker
+
+  <features>
+    <acpi/>
+    <apic/>
+    **<kvm>**
+      **<hidden state='on'/>**
+    **</kvm>**
+    <vmport state='off'/>
+  </features>
+```
+
+
+

@@ -1,4 +1,4 @@
-### **TCP Receive Queue and netdev_max_backlog**
+### ** TCP Receive Queue and netdev_max_backlog**
 
 TCP 수신 대기열 및 netdev_max_backlog 각 CPU 코어는 네트워크 스택이 처리 할 수 있기 전에 링 버퍼에 여러 패킷을 보유 할 수 있습니다. 버퍼가 TCP 스택이 처리 할 수있는 것보다 빨리 채워지면 삭제 된 패킷 카운터가 증가하고 삭제됩니다. 처리를 위해 대기중인 패킷 수를 최대화하려면 net.core.netdev_max_backlog 설정을 늘려야합니다.
 

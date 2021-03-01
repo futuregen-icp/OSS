@@ -179,3 +179,77 @@ sort_buffer_size  -  256KB to 1MB
 read_buffer_size  -  128KB to 512KB
 read_rnd_buffer_size  -  256KB to 1MB
 ```
+
+
+
+
+
+
+
+pracona
+
+##### [Kernel – vm.swappiness](https://en.wikipedia.org/wiki/Swappiness)
+
+```
+# Set the swappiness value as root
+echo 1 > /proc/sys/vm/swappiness
+ 
+# Alternatively, using sysctl
+sysctl -w vm.swappiness=1
+ 
+# Verify the change
+cat /proc/sys/vm/swappiness
+1
+ 
+# Alternatively, using sysctl
+sysctl vm.swappiness
+vm.swappiness = 1
+```
+
+
+
+##### [Filesystems – XFS/ext4/ZFS](https://en.wikipedia.org/wiki/Comparison_of_file_systems)
+
+XFS
+
+```
+Shell
+# Use default mkfs options
+mkfs.xfs /dev/target_volume
+
+# Use default mkfs options
+mkfs.xfs /dev/target_volume
+
+
+/dev/sda2              /datastore              xfs     defaults,nobarrier
+/dev/sdb2              /binlog                 xfs     defaults,nobarrier
+```
+
+ext4
+
+```
+/dev/sda2              /datastore              ext4     noatime,data=writeback,barrier=0,nobh,errors=remount-ro
+/dev/sdb2              /binlog                 ext4     noatime,data=writeback,barrier=0,nobh,errors=remoun
+```
+
+ZFS
+
+##### [Disk Subsystem – I/O scheduler ](https://en.wikipedia.org/wiki/I/O_scheduling)
+
+```
+# View the I/O scheduler setting. The value in square brackets shows the running scheduler
+cat /sys/block/sdb/queue/scheduler 
+noop deadline [cfq]
+
+# Change the setting
+sudo echo noop > /sys/block/sdb/queue/scheduler
+
+-----------------------------------------------------------------------------------------------
+
+# Change the line:
+GRUB_CMDLINE_LINUX_DEFAULT="quiet splash"
+
+# to:
+GRUB_CMDLINE_LINUX_DEFAULT="quiet splash elevator=noop"
+```
+
