@@ -54,9 +54,9 @@ java -jar ./jenkins.war --httpPort=8080 \
                         --httpsListenAddress=0.0.0.0  \
                         --ajp13Port=8009 \
                         --ajp13ListenAddress=127.0.0.1 \
-                        --prefix=jenkins \
-                        -Xmx3G -Xms3G -server -d64 -XX:+UseParallelGC \
-                        -XX:ParallelGCThreads=2 -XX:MaxPermSize=1G
+#                        --prefix=jenkins \
+#                        -Xmx3G -Xms3G -server -d64 -XX:+UseParallelGC \
+#                        -XX:ParallelGCThreads=2 -XX:MaxPermSize=1G
 ```
 
 
