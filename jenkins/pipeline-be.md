@@ -30,10 +30,19 @@ jenkins 관리 > plugin 관리 >  **설치된 플러그인 **
 
 좌측 메뉴의 build now를 누르면 실행됩니다.
 
-![](C:\Users\jslee\Documents\GitHub\OSS\jenkins\image\pipeline-5-be.png)
+![](./image/pipeline-5-be.png)
 
 
 
 **성공시 아래와 같이 로그가 남음**
 
-![](C:\Users\jslee\Documents\GitHub\OSS\jenkins\image\pipeline-7-begin.png)
+![](./image/pipeline-7-begin.png)
+
+
+
+
+
+
+
+참조 :  https://jojoldu.tistory.com/355
+
