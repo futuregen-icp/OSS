@@ -1,0 +1,31 @@
+def namespace = 'dodf-test'
+def buildConf = 'dobf-test-obif'
+
+pipeline {
+  agent {
+    node {
+      label 'maven'
+    }
+  }
+  options {
+    timeout(time: 20, unit: "MINUTES')
+  }
+  stages {
+    stage('Build' & 'Deploy') {
+      steps {
+        script {
+          openshift.withCluster() {
+            openshift.withProject(namespace) {
+              def build = openshift.starBuild(buildConf)
+              build.untilEach {
+                return it.object().status.phase == "Running"
+              }
+              build.logs('-f')
+            }
+          }
+        }
+      }
+    }
+  }
+}
+            
