@@ -42,6 +42,45 @@ DB 조회나 다양한 로직 처리를 요구하는 동적인 컨텐츠를 제�
 ![enter image description here](https://camo.githubusercontent.com/5ba9c98e29a385a593c1f86546a00dd69b6f977f/68747470733a2f2f676d6c776a64393430352e6769746875622e696f2f696d616765732f7765622f7374617469632d76732d64796e616d69632e706e67)
 
 
+## APM 바이너리 설치
+<교본에 안내된 버전으로 설치>
+ - [ apache httpd-2.2.4 설치]
+ - wget http://archive.apache.org/dist/httpd/httpd-2.2.4.tar.gz  다운로드 후
+ - tar -zxvf httpd-2.2.4.tar.gz 압축 해재 
+ - [  mysql-5.0.37 설치 ]
+ - wget https://downloads.mysql.com/archives/get/p/23/file/mysql-5.0.37.tar.gz 다운로드 
+ - tar -zxvf mysql-5.0.37.tar.gz 압축 해재
+ - [ PHP-5.3.4 설치]
+ - wget http://museum.php.net/php5/php-5.3.4.tar.gz
+ - tar -zxf php-5.3.4.tar.gz 압축 해재 
+
+> php 5.2.x 릴리즈에 컴파일 오류로 5.3.4 설치 ,
+ 구글링하여 패치 파일 설치 
+## 필요 컴파일러 및 라이브러리 설치
+ 1. yum -y install gcc cpp gcc-c++ compat-gcc-32-g77 flex
+ 2. yum -y install libjpeg-devel libpng-devel freetype-devel gd-devel 
+--컴파일러 : 번역프로그램 
+원시프로그램->컴파일러->타겟프로그램
+> 설치순서 : mysql -> apache -> php
+## mysql 설치
+ 1. mysql 사용자 계정 생성
+useradd -M -s /bin/false mysql 
+tip) 쉘 사용권이 없고 유저 기본 디렉터리를 만들지 않음
+2. ./configure실행 
+./configure --prefix=/usr/local/server/mysql --with-charset=utf8 --with-extra-charset=all
+--옵션 값 
+/usr/local/server/mysql 바이너리 설치 경로 지정,
+기본 문자셋을  utf8 지정 -한글깨짐방지, 추가 charset 지정
+3. make && make install
+4. 환경설정 샘플파일을 my.cnf 로 복사
+cp support-files/my-large.cnf /etc/my.cnf
+5. 기본 DB 생성
+cd /server/mysql 
+bin/mysql_install_db --user=mysql
+
+
+> 컴파일 오류 // yum -y install libtermcap-devel ncurses-devel / 라이브러리 추가 설치 //컴파일오류시 make >& error.txt 로 확인할것!
+
 
 
 
