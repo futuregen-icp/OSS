@@ -77,10 +77,88 @@ cp support-files/my-large.cnf /etc/my.cnf
 5. 기본 DB 생성
 cd /server/mysql 
 bin/mysql_install_db --user=mysql
-
-
+6. 디렉토리 권한 설정 
+ chown -R root . 
+ chown -R mysql var
+ chgrp -R mysql .
+-R : 경로와 하위 파일을 모두 변경한다. 
 > 컴파일 오류 // yum -y install libtermcap-devel ncurses-devel / 라이브러리 추가 설치 //컴파일오류시 make >& error.txt 로 확인할것!
+7. 환경변수 등록
+vi ~/.bash_profile  
+source ~/.bash_profile
+8. 자동실행 설정
+- cp share/mysql/mysql.server /etc/init.d/mysqld 
+- chkconfig --add mysqld
+mysql의 실행 파일을 /etc/init.d에 복사하고 chkconfig 명령어로 추가해 준다.
+- 확인 : chkconfig --list | grep mysql
+ - 실행 : /etc/init.d/mysqld start
 
+# apache 설치
+
+ 1. ./configure 실행
+ ./configure --prefix=/usr/local/server/apache --enable-mods-shared=all --enable-so --enable-rewrite 
+- 옵션 
+- --enable-mods-shared=all : 모든 모듈을 DOS 모드로 작성한다.
+- --enable-so : DOS모듈 활성화.
+- --enable-rewrite : URL 재작성 모듈을 활성화 한다.
+ 2. 컴파일 및 설치파일 설치
+make && make install
+3. 자동실행 설정 
+cp /usr/local/server/apache/bin/apachectl /etc/init.d/httpd
+vi /etc/init.d/httpd 에 코드 설정 [enter link description here](http://jobdahan.net/server_linux/1498282)
+4. 환경설정 
+User nobody
+Group nobody
+=기본값인 daemon 에서 nobody로 변경한다. root권한으로 실행된 아파치의 하위 프로세스를 이곳에서 지정한 사용자로 실행한다는 뜻 
+ServerName study2.test.fu.igotit.co.kr
+= 클라이언트에게 보여주는 호스트의 이름을 지정.도메인 or IP주소
+ServerRoot "/usr/local/server/apache"
+=apache웹서버가 설치된 절대경로 마지막에 /는 입력하지 않는다. 이후에 나오는 대부분의 경로들은 이 경로에 대한 상대경로로 지정이됨.
+DocumentRoot "/var/www/html"
+=아파치 웹서버의 웹 문서가 있는 경로를 설정한다(*.html, *.php) 브라우저에서 도메인으로 접속하면 설정한 디렉토리에서 index 파일을 찾는다.
+<Directory "/var/www/html"> 
+		Options Indexes FollowSymLinks
+		AllowOverride None
+		Order allow,deny
+        Allow from all 
+ </ Directory>
+=지시자는 해당 디렉토리 이하의 모든 웹문서를 어떻게 제어할 것인지를 설정
+## firewall-cmd 설정
+firewall-cmd --permanent --add-port=80/tcp
+firewall-cmd --permanent --add-service=http
+firewall-cmd --list-all 
+> https://webdir.tistory.com/178 http.conf 옵션값 설명
+
+## php 설치
+
+1. ./configure 실행
+./configure --prefix=/usr/local/server/php --with-apxs2=/usr/local/server/apache/bin/apxs --with-mysql=/usr/local/server/mysql --with-config-file-path=/usr/local/server/apache/conf --disable-debug --enable-safe-mode --enable-track-vars --enable-sockets --with-mod_charset --with-charset=utf8 --with-xml --with-language=korean --enable-mailparse --enable-calender --enable-sysvsem=yes --enable-sysvshm=yes --enable-ftp --enable-magic-quotes --enable-gd-native-ttf --enable-url-includes --enable-inline-optimization --enable-bcmath --with-jpeg --with-png --with-zlib --with-jpeg-dir=/usr --with-png-dir=/usr/lib --with-freetype-dir=/usr --with-libxml-dir=/usr --enable-exif --with-gd --with-gettext --enable-sigchild --enable-mbstring
+- 옵션값 
+---with-apxs2=/usr/local/server/apache/bin/apxs 
+= 아파치의 apxs를 이용해 아파티에 모듈을 적재한다 
+ ---with-mysql=/usr/local/server/mysql
+ = Mysql과 연동
+ --with-config-file-path=/usr/local/server/apache/conf
+ = php환경설정 파일인 php.ini가 생성될 위치 지정
+  나머지는 라이브러리들을 포함하는 옵션들
+ 2. make && make install
+  
+ 컴파일과 설치가 되었다면 /usr/local/server/php 에 설치가 되고
+ 환경 설정 파일은 /usr/local/server/apache/conf 에 설정해야 한다. http.conf 설정의 DocumentRoot "/var/www/html" 로 세팅이 되어 있으므로 해당 디렉토리로 설정해도됨.
+
+ 4. 환경설정
+- cp php.ini-* /usr/local/server/apache/conf/php.ini
+환경설정 파일은 php.ini-으로 샘플을 제공한다. ./configure에서 환경설정파일의 경로로 복사한다.
+ - http.conf 수정
+DirectoryIndex index.html index.htm index.php
+ AddType application/x-httpd-php .php
+ AddType application/x-httpd-php-source .phps
+ 
+ 아파치와의 연동을 위해 DirectoryIndex에 index.php를 추가하고 , mime_moudule에 .php로된 파일을 php문서로 인식할수 있게 AddType지시어를 이용해 설정한다.
+
+> php-5.2.X  컴파일 오류로 소스파일이 있는 디렉토리에 패치파일 다운로드 받아 실행
+> wget -O php.patch  https://mail.gnome.org/archives/xml/2012-August/txtbgxGXAvz4N.txt 
+> patch -p0 pb < php.patch	
 
 
 
