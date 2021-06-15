@@ -128,3 +128,6 @@ Configuration > Data Source > Add data source > oracle Cloud infrastructure Metr
 
 ![](./image/g13.jpg)
 
+
+
+참고 : https://github.com/oracle/oci-grafana-metrics/blob/master/docs/linuxoci.md
