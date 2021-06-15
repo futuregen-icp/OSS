@@ -131,5 +131,7 @@ Configuration > Data Source > Add data source > oracle Cloud infrastructure Metr
 
 
 참고 : https://github.com/oracle/oci-grafana-metrics/blob/master/docs/linuxoci.md
+
        http://oracle-help.com/oracle-cloud/devops/installation-of-grafana-on-oci-instance/
+       
        http://oracle-help.com/oracle-cloud/devops/monitoring-oci-with-grafana/
