@@ -1,3 +1,5 @@
+https://www.notion.so/songcloud/RHEL-OS-27adadb56cf245f0b3c88b8a7a6710a6 <- 노션 링크
+
 # RHEL OS  설치 및 기본 환경 구성
 
 ====================================================
