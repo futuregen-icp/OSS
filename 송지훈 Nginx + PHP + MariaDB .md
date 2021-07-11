@@ -351,6 +351,6 @@ vi /var/www/html/info.php
 
 ![Nginx%20+%20PHP%20+%20MariaDB%20d5ca2581d3e340238b20e5ca053d1aa9/1.jpg](Nginx%20+%20PHP%20+%20MariaDB%20d5ca2581d3e340238b20e5ca053d1aa9/1.jpg)
 
-mariadb 연동 확인
+mariadb 
 
 ![Nginx%20+%20PHP%20+%20MariaDB%20d5ca2581d3e340238b20e5ca053d1aa9%201.jpg](Nginx%20+%20PHP%20+%20MariaDB%20d5ca2581d3e340238b20e5ca053d1aa9%201.jpg)
