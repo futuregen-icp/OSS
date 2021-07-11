@@ -1,3 +1,5 @@
+https://www.notion.so/songcloud/SSH-Secure-Shell-e4b3315f46314ebf9beec483c8bb9048
+
 # SSH(Secure Shell)
 
 SSH 키를 통한 리눅스 서버 SSH 접속
