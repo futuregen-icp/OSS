@@ -1,3 +1,5 @@
+https://www.notion.so/songcloud/Nginx-8dafd7c5ce80476289f6e4c2db8479f0
+
 # Nginx
 
 # 설치 및 연동
