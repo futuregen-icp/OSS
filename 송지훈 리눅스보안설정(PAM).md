@@ -1,3 +1,5 @@
+https://www.notion.so/songcloud/PAM-20aad0930bc74ca8b5309de94fbaae71
+
 # 리눅스 보안 설정(PAM)
 
 ## **1. 개요**
