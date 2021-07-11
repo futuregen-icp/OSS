@@ -1,3 +1,5 @@
+https://www.notion.so/songcloud/DNS-ae3614834b48418985faff1d48347fe7
+
 # DNS
 
 ### **1. DNS (Domain Name System)**
