@@ -1,3 +1,5 @@
+https://www.notion.so/songcloud/MariaDB-MySql-964ed5231f374fdc8fb270ffdf20933f
+
 # MariaDB / MySql
 
 MYSQL은 전세계적으로 가장 널리 사용되고 있는 오픈 소스 데이터베이스이며, MySQL AB사가 개발하여 배포/판매하고 있는 데이터베이스(DataBase)이다.
