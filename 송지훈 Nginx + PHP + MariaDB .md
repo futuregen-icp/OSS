@@ -1,3 +1,5 @@
+https://www.notion.so/songcloud/Nginx-PHP-MariaDB-9672317400d24d3b83e29298edc1bb9c
+
 # Nginx + PHP + MariaDB
 
 ## Nginx에서 PHP-fpm로의 PHP파일 전달 과정
