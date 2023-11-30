@@ -1,0 +1,93 @@
+Why do "ip address" or "ip link" report "state UNKNOWN" for some devices?
+ SOLUTION VERIFIED - Updated April 1 2020 at 5:13 AM - English 
+Environment
+Red Hat Enterprise Linux
+Network interfaces
+ip command from iproute2 network command suite
+Issue
+Why do ip address or ip link report state UNKNOWN for some devices?
+Raw
+$ ip link show lo
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN mode DEFAULT 
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+Resolution
+For some interfaces, this may be intended by design.
+
+For some interfaces, this may be expected. For example, some WiFi network devices report UNKNOWN while establishing a wireless signal.
+
+But for Virtual Machine on Red Hat OpenStack environment, this was reported as a bug and is fixed on kernel-3.10.0-1127.el7 with ERRATA
+
+For some interfaces, this may also be a bug, as a network interface driver should be setting a valid state most of the time.
+
+If you have a query about a specific network interface type, please contact your Red Hat Support representative.
+
+Root Cause
+The state reported by ip is the operstate field of the net_device structure, the kernel's generic definition of a network interface.
+
+When a network interface is running (checked by netif_running()), the kernel is expected to report an Interface Oper Status, as defined by RFC 2863 - The Interfaces Group MIB.
+
+The value of operstate itself is controlled by a state machine within the kernel in net/core/link_watch.c, and this relies on the network driver to set the appropriate device flags via the netif API.
+
+If the driver does not set sensible netif flags, then an operstate of IF_OPER_UNKNOWN may be returned by the state machine, and ip prints state UNKNOWN.
+
+It's worth noting that the RFC defines when an error condition is met:
+
+Raw
+3.1.13.  IfAdminStatus and IfOperStatus
+
+   The down state of ifOperStatus now has two meanings, depending on the
+   value of ifAdminStatus.
+
+   (1)   if ifAdminStatus is not down and ifOperStatus is down then a
+         fault condition is presumed to exist on the interface.
+So a status of state UNKNOWN is not an error, though the interface state may be able to be reported better.
+
+Diagnostic Steps
+When ip prints an interface status, it is referring to an array of states defined at:
+
+Raw
+ip/ipaddress.c
+
+ 127 static const char *oper_states[] = {
+ 128         "UNKNOWN", "NOTPRESENT", "DOWN", "LOWERLAYERDOWN", 
+ 129         "TESTING", "DORMANT",    "UP"
+ 130 };
+ 131 
+ 132 static void print_operstate(FILE *f, __u8 state)
+ 133 {
+ 134         if (state >= sizeof(oper_states)/sizeof(oper_states[0]))
+ 135                 fprintf(f, "state %#x ", state);
+ 136         else
+ 137                 fprintf(f, "state %s ", oper_states[state]);
+ 138 }
+This is printed within ip at:
+
+Raw
+ip/ipaddress.c
+
+ 389 int print_linkinfo(const struct sockaddr_nl *who,
+ 390                    struct nlmsghdr *n, void *arg)
+ 391 {
+ ...
+ 394         struct rtattr * tb[IFLA_MAX+1];
+ ...
+ 455         if (tb[IFLA_OPERSTATE])
+ 456                 print_operstate(fp, rta_getattr_u8(tb[IFLA_OPERSTATE]));
+This data is filled in by a query which ip makes to the kernel via the NETLINK_ROUTE API, described in man 7 rtnetlink.
+
+The kernel fills in the query with:
+
+Raw
+net/core/rtnetlink.c
+
+static int rtnl_fill_ifinfo(struct sk_buff *skb, struct net_device *dev,
+                            int type, u32 pid, u32 seq, u32 change,
+                            unsigned int flags, u32 ext_filter_mask)
+{
+The IFLA_OPERSTATE field is filled in with:
+
+Raw
+            nla_put_u8(skb, IFLA_OPERSTATE,
+                       netif_running(dev) ? dev->operstate : IF_OPER_DOWN)
+Product(s) Red Hat Enterprise LinuxComponent iproute kernelCategory TroubleshootTags network networking network_stack routing snmp
+This solution is part of Red Hat’s fast-track publication program, providing a huge library of solutions that Red Hat engineers have created while supporting our customers. To give you the knowledge you need the instant it becomes available, these articles may be presented in a raw and unedited form.
